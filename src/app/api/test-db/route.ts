@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { neon } from "@neondatabase/serverless";
+import { Client } from "pg";
 
 export async function GET() {
   const rawUrl = process.env.DATABASE_URL;
@@ -10,13 +10,19 @@ export async function GET() {
   const url = rawUrl.trim();
   const host = url.split('@')[1]?.split(':')[0];
 
+  const client = new Client({
+    connectionString: url,
+    ssl: { rejectUnauthorized: false },
+  });
+
   try {
-    const sql = neon(url);
-    const result = await sql`SELECT NOW() as time`;
+    await client.connect();
+    const result = await client.query('SELECT NOW() as time');
+    await client.end();
 
     return NextResponse.json({
       success: true,
-      time: result[0].time,
+      time: result.rows[0].time,
       host
     });
   } catch (error) {
