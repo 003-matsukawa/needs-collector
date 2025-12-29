@@ -1,26 +1,16 @@
 import { Suspense } from "react";
 import { Header } from "@/components/header";
-import { SearchBar } from "@/components/search-bar";
-import { CategoryTabs } from "@/components/category-tabs";
 import { NeedsList } from "@/components/needs-list";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function HomePage() {
+export default function BookmarksPage() {
   return (
     <div className="min-h-screen bg-[#F5F5F7]">
       <Header />
       <main className="mx-auto max-w-3xl px-4 py-8">
-        <div className="mb-6">
-          <Suspense fallback={<Skeleton className="h-12 w-full rounded-xl" />}>
-            <SearchBar />
-          </Suspense>
-        </div>
-
-        <div className="mb-6">
-          <Suspense fallback={<Skeleton className="h-10 w-full" />}>
-            <CategoryTabs />
-          </Suspense>
-        </div>
+        <h1 className="mb-6 text-2xl font-semibold text-[#1D1D1F]">
+          ブックマーク
+        </h1>
 
         <Suspense
           fallback={
@@ -31,7 +21,7 @@ export default function HomePage() {
             </div>
           }
         >
-          <NeedsList />
+          <NeedsList bookmarksOnly />
         </Suspense>
       </main>
     </div>

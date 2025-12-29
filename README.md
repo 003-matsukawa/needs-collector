@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NEEDS - SNSニーズ収集アプリ
 
-## Getting Started
+SNS（Threads）からニーズを収集し、ジャンル別に分類・管理するWebアプリケーション。
 
-First, run the development server:
+## 技術スタック
+
+- **フレームワーク**: Next.js 16 (App Router)
+- **認証**: better-auth
+- **ORM**: Drizzle ORM
+- **データベース**: PostgreSQL (Supabase)
+- **UI**: shadcn/ui + Tailwind CSS 4
+- **AI分類**: Gemini 2.5 Flash
+- **デプロイ**: Vercel
+
+## セットアップ
+
+### 1. 依存関係のインストール
+
+```bash
+npm install
+```
+
+### 2. 環境変数の設定
+
+`.env.example` をコピーして `.env` を作成し、必要な値を設定:
+
+```bash
+cp .env.example .env
+```
+
+### 3. データベースのセットアップ
+
+```bash
+npm run db:push
+```
+
+### 4. 開発サーバーの起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000) を開いてアプリを確認。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## デプロイ
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Vercel
 
-## Learn More
+1. GitHubリポジトリを作成してプッシュ
+2. [Vercel](https://vercel.com)でプロジェクトをインポート
+3. 環境変数を設定
+4. デプロイ
 
-To learn more about Next.js, take a look at the following resources:
+### Supabase連携
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. [Supabase](https://supabase.com)でプロジェクトを作成
+2. Vercel Integrationで自動接続
+3. 環境変数が自動的に設定される
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 環境変数
 
-## Deploy on Vercel
+| 変数 | 説明 |
+|------|------|
+| `DATABASE_URL` | Supabase PostgreSQL接続URL |
+| `NEXT_PUBLIC_APP_URL` | アプリのURL |
+| `BETTER_AUTH_SECRET` | 認証用シークレットキー |
+| `GOOGLE_CLIENT_ID/SECRET` | Google OAuth |
+| `GITHUB_CLIENT_ID/SECRET` | GitHub OAuth |
+| `THREADS_APP_ID/SECRET` | Threads API |
+| `GEMINI_API_KEY` | Gemini AI API |
+| `SENTRY_DSN` | Sentryエラー監視 |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## スクリプト
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| コマンド | 説明 |
+|----------|------|
+| `npm run dev` | 開発サーバー起動 |
+| `npm run build` | プロダクションビルド |
+| `npm run start` | プロダクションサーバー |
+| `npm run db:push` | DBスキーマをプッシュ |
+| `npm run db:studio` | Drizzle Studioを開く |
