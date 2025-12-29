@@ -7,28 +7,30 @@ export async function GET() {
     return NextResponse.json({ error: "No DATABASE_URL" }, { status: 500 });
   }
 
+  // Show partial URL for debugging (hide password)
+  const debugUrl = url.replace(/:[^:@]+@/, ':****@');
+
   try {
     const sql = postgres(url, {
       ssl: 'require',
       max: 1,
       idle_timeout: 20,
-      connect_timeout: 10,
+      connect_timeout: 15,
     });
 
-    const result = await sql`SELECT 1 as test`;
+    const result = await sql`SELECT NOW() as time`;
     await sql.end();
 
     return NextResponse.json({
       success: true,
-      result: result[0],
-      host: url.split('@')[1]?.split(':')[0]
+      time: result[0].time,
+      debugUrl
     });
   } catch (error) {
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : "Unknown",
-      cause: error instanceof Error && error.cause ? String(error.cause) : undefined,
-      host: url.split('@')[1]?.split(':')[0]
+      debugUrl
     }, { status: 500 });
   }
 }
