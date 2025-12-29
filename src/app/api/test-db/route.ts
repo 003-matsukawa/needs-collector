@@ -1,25 +1,34 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { users } from "@/drizzle/schema";
+import postgres from "postgres";
 
 export async function GET() {
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    return NextResponse.json({ error: "No DATABASE_URL" }, { status: 500 });
+  }
+
   try {
-    const result = await db.select().from(users).limit(1);
+    const sql = postgres(url, {
+      ssl: 'require',
+      max: 1,
+      idle_timeout: 20,
+      connect_timeout: 10,
+    });
+
+    const result = await sql`SELECT 1 as test`;
+    await sql.end();
+
     return NextResponse.json({
       success: true,
-      hasUrl: !!process.env.DATABASE_URL,
-      userCount: result.length
+      result: result[0],
+      host: url.split('@')[1]?.split(':')[0]
     });
   } catch (error) {
-    const urlInfo = process.env.DATABASE_URL
-      ? `host: ${process.env.DATABASE_URL.split('@')[1]?.split(':')[0] || 'unknown'}`
-      : 'no url';
     return NextResponse.json({
       success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-      stack: error instanceof Error ? error.stack?.split('\n').slice(0, 5) : undefined,
-      hasUrl: !!process.env.DATABASE_URL,
-      urlInfo
+      error: error instanceof Error ? error.message : "Unknown",
+      cause: error instanceof Error && error.cause ? String(error.cause) : undefined,
+      host: url.split('@')[1]?.split(':')[0]
     }, { status: 500 });
   }
 }
