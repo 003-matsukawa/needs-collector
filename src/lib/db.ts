@@ -1,8 +1,7 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
 import * as schema from "@/drizzle/schema";
 
-// Handle missing DATABASE_URL during build time
 const getDatabaseUrl = () => {
   if (!process.env.DATABASE_URL) {
     return "postgresql://placeholder:placeholder@placeholder:5432/placeholder";
@@ -10,7 +9,5 @@ const getDatabaseUrl = () => {
   return process.env.DATABASE_URL;
 };
 
-const connectionString = getDatabaseUrl();
-const client = postgres(connectionString, { prepare: false });
-
-export const db = drizzle(client, { schema });
+const sql = neon(getDatabaseUrl());
+export const db = drizzle(sql, { schema });
