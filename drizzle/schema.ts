@@ -77,7 +77,22 @@ export const bookmarks = pgTable("bookmarks", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Threads connection for auto-collection
+export const threadsConnections = pgTable("threads_connections", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
+  threadsUserId: text("threads_user_id").notNull(),
+  accessToken: text("access_token").notNull(),
+  tokenExpiresAt: timestamp("token_expires_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type Need = typeof needs.$inferSelect;
 export type Bookmark = typeof bookmarks.$inferSelect;
+export type ThreadsConnection = typeof threadsConnections.$inferSelect;

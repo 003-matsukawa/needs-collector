@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Plus, Star, LogOut, User } from "lucide-react";
+import { Plus, Star, LogOut, User, Settings } from "lucide-react";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
@@ -78,6 +78,12 @@ export function Header() {
                   {session.user.email}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/settings">
+                    <Settings className="mr-2 h-4 w-4" />
+                    設定
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleSignOut}
                   className="text-red-500 focus:text-red-500"

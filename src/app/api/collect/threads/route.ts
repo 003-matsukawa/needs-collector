@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { needs } from "@/drizzle/schema";
+import { needs, threadsConnections } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { searchThreadsNeeds } from "@/lib/threads";
 import { classifyNeed } from "@/lib/classifier";
 import { nanoid } from "nanoid";
+import { eq } from "drizzle-orm";
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,18 +18,39 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { accessToken, keywords = [] } = body;
+    // Get stored Threads connection
+    const connection = await db
+      .select()
+      .from(threadsConnections)
+      .where(eq(threadsConnections.userId, session.user.id));
 
-    if (!accessToken) {
+    if (connection.length === 0) {
       return NextResponse.json(
-        { error: "Threads access token is required" },
+        { error: "Threadsアカウントが連携されていません" },
         { status: 400 }
       );
     }
 
+    const accessToken = connection[0].accessToken;
+
+    // Get keywords from request body (optional)
+    let keywords: string[] = [];
+    try {
+      const body = await request.json();
+      keywords = body.keywords || [];
+    } catch {
+      // No body or invalid JSON, use empty keywords
+    }
+
     // Search for needs on Threads
     const posts = await searchThreadsNeeds(accessToken, keywords);
+
+    if (posts.length === 0) {
+      return NextResponse.json({
+        data: [],
+        message: "新しいニーズは見つかりませんでした",
+      });
+    }
 
     // Process and save each post
     const savedNeeds = [];
