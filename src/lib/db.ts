@@ -6,7 +6,7 @@ const getDatabaseUrl = () => {
   if (!process.env.DATABASE_URL) {
     return "postgresql://placeholder:placeholder@placeholder:5432/placeholder";
   }
-  return process.env.DATABASE_URL;
+  return process.env.DATABASE_URL.trim();
 };
 
 const client = postgres(getDatabaseUrl(), {

@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import postgres from "postgres";
 
 export async function GET() {
-  const url = process.env.DATABASE_URL;
-  if (!url) {
+  const rawUrl = process.env.DATABASE_URL;
+  if (!rawUrl) {
     return NextResponse.json({ error: "No DATABASE_URL" }, { status: 500 });
   }
 
+  const url = rawUrl.trim();
   // Show partial URL for debugging (hide password)
   const debugUrl = url.replace(/:[^:@]+@/, ':****@');
 
