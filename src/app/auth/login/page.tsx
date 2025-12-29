@@ -39,17 +39,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleSocialLogin = async (provider: "google" | "github") => {
-    try {
-      await signIn.social({
-        provider,
-        callbackURL: "/",
-      });
-    } catch {
-      toast.error("ログインに失敗しました");
-    }
-  };
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#F5F5F7] px-4">
       <Card className="w-full max-w-md border-[#E5E5E5] bg-white">
@@ -102,34 +91,6 @@ export default function LoginPage() {
               )}
             </Button>
           </form>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#E5E5E5]" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-2 text-[#86868B]">または</span>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleSocialLogin("google")}
-              className="w-full border-[#E5E5E5]"
-            >
-              Googleでログイン
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleSocialLogin("github")}
-              className="w-full border-[#E5E5E5]"
-            >
-              GitHubでログイン
-            </Button>
-          </div>
 
           <p className="mt-6 text-center text-sm text-[#86868B]">
             アカウントをお持ちでない方は{" "}
