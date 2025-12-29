@@ -11,10 +11,15 @@ export async function GET() {
       userCount: result.length
     });
   } catch (error) {
+    const urlInfo = process.env.DATABASE_URL
+      ? `host: ${process.env.DATABASE_URL.split('@')[1]?.split(':')[0] || 'unknown'}`
+      : 'no url';
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
-      hasUrl: !!process.env.DATABASE_URL
+      stack: error instanceof Error ? error.stack?.split('\n').slice(0, 5) : undefined,
+      hasUrl: !!process.env.DATABASE_URL,
+      urlInfo
     }, { status: 500 });
   }
 }
