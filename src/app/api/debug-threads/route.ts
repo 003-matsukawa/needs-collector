@@ -1,17 +1,22 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const appId = process.env.THREADS_APP_ID;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const clientId = process.env.THREADS_APP_ID?.trim();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  const redirectUri = `${appUrl}/api/auth/threads/callback`;
+  const scope = "threads_basic,threads_content_publish";
+
+  const authUrl = new URL("https://www.threads.net/oauth/authorize");
+  authUrl.searchParams.set("client_id", clientId || "");
+  authUrl.searchParams.set("redirect_uri", redirectUri);
+  authUrl.searchParams.set("scope", scope);
+  authUrl.searchParams.set("response_type", "code");
+  authUrl.searchParams.set("state", "test_user_id");
 
   return NextResponse.json({
-    appIdExists: !!appId,
-    appIdLength: appId?.length,
-    appIdValue: appId ? `${appId.slice(0, 4)}...${appId.slice(-4)}` : null,
-    appIdHasWhitespace: appId !== appId?.trim(),
-    appIdCharCodes: appId ? [...appId].slice(-5).map(c => c.charCodeAt(0)) : null,
-    appUrlExists: !!appUrl,
-    appUrl: appUrl,
-    redirectUri: appUrl ? `${appUrl}/api/auth/threads/callback` : null,
+    clientId: clientId,
+    redirectUri: redirectUri,
+    generatedAuthUrl: authUrl.toString(),
+    rawQueryString: authUrl.search,
   });
 }
