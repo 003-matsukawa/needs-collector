@@ -17,7 +17,7 @@ export async function GET() {
     const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/threads/callback`;
     const scope = "threads_basic,threads_content_publish";
 
-    const authUrl = `https://threads.net/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&response_type=code&state=${session.user.id}`;
+    const authUrl = `https://www.threads.net/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&response_type=code&state=${session.user.id}`;
 
     return NextResponse.redirect(authUrl);
   } catch (error) {
