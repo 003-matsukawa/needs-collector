@@ -29,7 +29,7 @@ export async function GET() {
     const redirectUri = `${appUrl}/api/auth/threads/callback`;
     const scope = "threads_basic,threads_content_publish";
 
-    const authUrl = new URL("https://www.threads.net/oauth/authorize");
+    const authUrl = new URL("https://threads.net/oauth/authorize");
     authUrl.searchParams.set("client_id", clientId);
     authUrl.searchParams.set("redirect_uri", redirectUri);
     authUrl.searchParams.set("scope", scope);
