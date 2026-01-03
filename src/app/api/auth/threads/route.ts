@@ -26,7 +26,7 @@ export async function GET() {
       return NextResponse.json({ error: "NEXT_PUBLIC_APP_URL not configured" }, { status: 500 });
     }
 
-    const redirectUri = `${appUrl}/api/auth/threads/callback`;
+    const redirectUri = `${appUrl}/api/auth/threads/callback/`;
     const scope = "threads_basic,threads_content_publish";
 
     const authUrl = new URL("https://threads.net/oauth/authorize");

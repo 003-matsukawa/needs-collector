@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
           client_id: process.env.THREADS_APP_ID!,
           client_secret: process.env.THREADS_APP_SECRET!,
           grant_type: "authorization_code",
-          redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/threads/callback`,
+          redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL?.trim()}/api/auth/threads/callback/`,
           code,
         }),
       }
